@@ -13,7 +13,7 @@ import importlib
 import codecs
 
 # New tools should be added to this list.
-TOOL_NAME_LIST = ['remove-background']
+TOOL_NAME_LIST = ['remove-background', 'select-cells']
 
 
 def read(rel_path):

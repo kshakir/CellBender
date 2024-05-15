@@ -14,7 +14,6 @@ import os
 import gzip
 import traceback
 
-
 logger = logging.getLogger('cellbender')
 
 
@@ -1199,9 +1198,31 @@ def _dict_from_anndata(adata: anndata.AnnData) -> Dict[str, Union[sp.csr_matrix,
                        f"does not match the number expected from the count "
                        f"matrix ({count_matrix.shape[0]}).")
 
+    barcode_num_reads = None
+    for key in ['n_reads']:
+        if key in adata.obs.keys():
+            barcode_num_reads = adata.obs[key]
+
+    barcode_num_reads_intronic = None
+    for key in ['reads_mapped_intronic']:
+        if key in adata.obs.keys():
+            barcode_num_reads_intronic = adata.obs[key]
+
+    barcode_pct_reads_intronic = None
+    if barcode_num_reads_intronic is not None and barcode_num_reads is not None:
+        barcode_pct_reads_intronic = barcode_num_reads_intronic / barcode_num_reads
+
+    barcode_num_fragments = None
+    for key in ['n_fragments']:
+        if key in adata.obs.keys():
+            barcode_num_fragments = adata.obs[key]
+
     return {'matrix': count_matrix,
             'gene_names': feature_names,
             'gene_ids': feature_ids,
             'genomes': genomes,
             'feature_types': feature_types,
-            'barcodes': barcodes}
+            'barcodes': barcodes,
+            'barcode_pct_reads_intronic': barcode_pct_reads_intronic,
+            'barcode_num_fragments': barcode_num_fragments,
+            }
